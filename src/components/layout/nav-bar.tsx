@@ -2,12 +2,12 @@
 
 import { FC } from 'react';
 import { ThemeToggle } from '~/components/theme/theme-toggle';
-import { Icon } from '~/components/ui/icon';
+import { Sparkles } from 'lucide-react';
 
 const Logo: FC = () => {
   return (
     <span className="flex">
-      <Icon name="sparkle"  />
+      <Sparkles />
       <span className="ml-2 font-semibold">
         Ripley
       </span>

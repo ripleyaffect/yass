@@ -1,6 +1,4 @@
-const transpilePackages = [
-  'lucide-react',
-]
+const transpilePackages = []
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {

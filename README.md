@@ -16,7 +16,7 @@ This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-opti
 
 ## Included Components
 
-- Most of the components from [ui.shadcn.com](https://ui.shadcn.com/) are included in the `src/components/ui` directory.
-- The [lucide-react](https://lucide.dev/guide/packages/lucide-react) package is included and an `Icon` component has been added to the ui directory
+- Most of the components from [ui.shadcn.com](https://ui.shadcn.com/) are included in the `src/components/ui` directory
+- The [lucide-react](https://lucide.dev/guide/packages/lucide-react) package is included for icons. Icons should be included individually, to support tree-shaking
 - A theme toggle component for toggling between light, dark, and system themes
 - A simple sticky nav bar component
