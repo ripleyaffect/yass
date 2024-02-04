@@ -1,5 +1,5 @@
 {
-  "name": "taskmaster",
+  "name": "yass",
   "version": "0.1.0",
   "private": true,
   "scripts": {
@@ -35,20 +35,32 @@
     "@radix-ui/react-tabs": "^1.0.4",
     "@radix-ui/react-toast": "^1.1.5",
     "@radix-ui/react-tooltip": "^1.0.7",
+    "@react-three/drei": "^9.96.5",
+    "@react-three/fiber": "^8.15.15",
     "@tanstack/react-table": "^8.10.7",
+    "@types/three": "^0.160.0",
+    "@use-gpu/wgsl-loader": "^0.10.1",
+    "@webgpu/types": "^0.1.40",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.0.0",
     "cmdk": "^0.2.0",
+    "colord": "^2.9.3",
     "date-fns": "^2.30.0",
+    "glslify-loader": "^2.0.0",
+    "json5": "^2.2.3",
+    "leva": "^0.9.35",
     "lucide-react": "^0.292.0",
     "next": "14.0.1",
     "next-themes": "^0.2.1",
+    "raw-loader": "^4.0.2",
     "react": "^18",
     "react-day-picker": "^8.9.1",
     "react-dom": "^18",
     "react-hook-form": "^7.48.2",
+    "react-monaco-editor": "^0.55.0",
     "tailwind-merge": "^2.0.0",
     "tailwindcss-animate": "^1.0.7",
+    "three": "^0.160.1",
     "zod": "^3.22.4"
   },
   "devDependencies": {
@@ -61,5 +73,9 @@
     "postcss": "^8",
     "tailwindcss": "^3.3.0",
     "typescript": "^5"
-  }
+  },
+  "main": "index.js",
+  "repository": "git@github.com:ripleyaffect/yass.git",
+  "author": "ripleyaffect <t.ripley.peterson@gmail.com>",
+  "license": "MIT"
 }
