@@ -217,12 +217,14 @@ export const GpuCanvas = () => {
         </div>
         <SimulationControls config={config} onConfigChange={setConfig} />
       </div>
-      <canvas
-        ref={canvasRef}
-        className="aspect-square"
-        width={Math.min(window.innerHeight, window.innerWidth)}
-        height={Math.min(window.innerHeight, window.innerWidth)}
-      />
+      <div className="flex items-center justify-center">
+        <canvas
+          ref={canvasRef}
+          className="aspect-square"
+          width={1024}
+          height={1024}
+        />
+      </div>
     </div>
   );
 };
