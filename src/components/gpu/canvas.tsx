@@ -93,6 +93,7 @@ const defaultConfig: SimulationConfig = {
 export const GpuCanvas = () => {
   const canvasRef = useRef<HTMLCanvasElement>(null!);
 
+  const [hasGPU, setHasGPU] = useState(!!navigator.gpu);
   const [isRunning, setIsRunning] = useState(false);
   const [gpuState, setGpuState] = useState<GPUState | null>(null);
   const [agentData, setAgentData] = useState<Float32Array>(getInitialAgentData(200000));
@@ -100,7 +101,7 @@ export const GpuCanvas = () => {
   const [config, setConfig] = useState<SimulationConfig>(defaultConfig);
 
   const onRender = useCallback(async () => {
-    if (!canvasRef.current) return;
+    if (!canvasRef.current || !navigator.gpu) return;
 
     if (!gpuState) {
       const context = canvasRef.current.getContext('webgpu');
@@ -202,6 +203,14 @@ export const GpuCanvas = () => {
   const onClick = () => {
     setIsRunning(!isRunning);
     step();
+  }
+
+  if (!hasGPU) {
+    return (
+      <div>
+        <p>WebGPU not supported on this device/browser.</p>
+      </div>
+    );
   }
 
   return (
