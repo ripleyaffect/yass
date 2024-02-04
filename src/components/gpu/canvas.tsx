@@ -12,14 +12,13 @@ import { SimulationControls } from '~/components/gpu/controls';
 import { Colord } from 'colord';
 
 const getInitialAgentData = (size: number, speedScale: number = 0.001) => {
-  // We have 4 floats per agent (p(x, y), v(x, y))
-  // They are aligned in 16 byte chunks, so no padding is needed
+  // 8 floats per agent
   let data = new Float32Array(size * 8);
   let variant = 0;
   for (let i = 0; i < size; i++) {
     const idx = i * 8;
-
     if (variant === 0) {
+
       data[idx] = 1.0;
       data[idx + 1] = 0.0;
       data[idx + 2] = 0.0;
@@ -34,27 +33,29 @@ const getInitialAgentData = (size: number, speedScale: number = 0.001) => {
       data[idx + 1] = 0.0;
       data[idx + 2] = 1.0;
     }
-
     // Alignment
     data[idx + 3] = 0.0;
 
+    // Position
     data[idx + 4] = Math.random();
     data[idx + 5] = Math.random();
+
+    // Direction
     data[idx + 6] = Math.random() * speedScale * (Math.random() > 0.5 ? 1 : -1);
     data[idx + 7] = Math.random() * speedScale * (Math.random() > 0.5 ? 1 : -1);
     variant = (variant + 1) % 3;
   }
-
   return data;
 }
 
 const TEXTURE_SIZE = 1024;
+const AGENT_COUNT = 200000;
 
 const defaultVariantConfig: VariantConfig = {
   color: new Colord('#ff0000'),
   sampleAngle: Math.PI / 4,
   sampleDistance: 5,
-  speed: 0.01,
+  speed: 5,
   interactions: {
     a: 1,
     b: 0,
@@ -93,10 +94,9 @@ const defaultConfig: SimulationConfig = {
 export const GpuCanvas = () => {
   const canvasRef = useRef<HTMLCanvasElement>(null!);
 
-  const [hasGPU, setHasGPU] = useState(!!navigator.gpu);
   const [isRunning, setIsRunning] = useState(false);
   const [gpuState, setGpuState] = useState<GPUState | null>(null);
-  const [agentData, setAgentData] = useState<Float32Array>(getInitialAgentData(200000));
+  const [agentData, setAgentData] = useState<Float32Array>(getInitialAgentData(AGENT_COUNT));
   const [pingPongTex, setPingPongTex] = useState<PingPongTexture | null>(null);
   const [config, setConfig] = useState<SimulationConfig>(defaultConfig);
 
@@ -203,14 +203,6 @@ export const GpuCanvas = () => {
   const onClick = () => {
     setIsRunning(!isRunning);
     step();
-  }
-
-  if (!hasGPU) {
-    return (
-      <div>
-        <p>WebGPU not supported on this device/browser.</p>
-      </div>
-    );
   }
 
   return (
