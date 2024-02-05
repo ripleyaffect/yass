@@ -91,9 +91,12 @@ const defaultConfig: SimulationConfig = {
   },
 };
 
+type CanvasStatus = 'loading' | 'invalid' | 'ready';
+
 export const GpuCanvas = () => {
   const canvasRef = useRef<HTMLCanvasElement>(null!);
 
+  const [status, setStatus] = useState<CanvasStatus>('loading');
   const [isRunning, setIsRunning] = useState(false);
   const [gpuState, setGpuState] = useState<GPUState | null>(null);
   const [agentData, setAgentData] = useState<Float32Array>(getInitialAgentData(AGENT_COUNT));
@@ -148,19 +151,28 @@ export const GpuCanvas = () => {
     }
   }, [gpuState]);
 
-  useLayoutEffect(() => {
-    const handleResize = () => {
-      // Resize your canvas and update any necessary resources
-    };
+  // useLayoutEffect(() => {
+  //   const handleResize = () => {
+  //     // Resize your canvas and update any necessary resources
+  //   };
+  //
+  //   window.addEventListener('resize', handleResize);
+  //   onRender();
+  //
+  //   return () => {
+  //     window.removeEventListener('resize', handleResize);
+  //     // Clean up any resources like GPU buffers here
+  //   };
+  // }, [onRender]);
 
-    window.addEventListener('resize', handleResize);
+  useEffect(() => {
+    if (!navigator.gpu) {
+      setStatus('invalid');
+      return;
+    }
+    setStatus('ready');
     onRender();
-
-    return () => {
-      window.removeEventListener('resize', handleResize);
-      // Clean up any resources like GPU buffers here
-    };
-  }, [onRender]);
+  }, []);
 
   const dissolve = async () => {
     if (!gpuState || !pingPongTex) return;
@@ -172,8 +184,6 @@ export const GpuCanvas = () => {
 
   const simulate = async () => {
     if (!gpuState || !pingPongTex) return null;
-
-    console.log(agentData.length);
 
     return await new SlimeComputePass(gpuState).run({
       agentData,
@@ -200,19 +210,27 @@ export const GpuCanvas = () => {
     step();
   }, [agentData]);
 
-  const onClick = () => {
+  const onPlay = () => {
     setIsRunning(!isRunning);
     step();
+  }
+
+  if (status === 'invalid') {
+    return (
+      <div>
+        WebGPU not supported on this device or browser
+      </div>
+    );
   }
 
   return (
     <div className="flex">
       <div className="w-[300px] mr-4">
         <div className="flex items-center justify-center bg-secondary p-2 mt-4 rounded uppercase font-semibold text-lg">
-          Y.A.S.S.
+          {status === 'loading' ? 'Loading...' : 'Y.A.S.S.'}
         </div>
         <div className="flex items-center my-4">
-          <Button className="flex-1 mr-2" onClick={onClick}>{isRunning ? 'Pause' : 'Play'}</Button>
+          <Button className="flex-1 mr-2" onClick={onPlay}>{isRunning ? 'Pause' : 'Play'}</Button>
           <Button size="icon" onClick={step}><StepForward size={15} /></Button>
         </div>
         <SimulationControls config={config} onConfigChange={setConfig} />
@@ -220,7 +238,7 @@ export const GpuCanvas = () => {
       <div className="flex items-center justify-center">
         <canvas
           ref={canvasRef}
-          className="aspect-square"
+          className="h-full aspect-square"
           width={1024}
           height={1024}
         />
